@@ -13,13 +13,18 @@ describe "Micropost" do
     micropost.should be_valid
   end
 
+  it "is invalid if text has more than 140 characters" do
+    micropost.text = "a" * 160
+    micropost.should_not be_valid
+  end
+
   it 'should return correct version string' do
-    Micropost.version_string.should == "Postler version #{Postler::VERSION}"
+    Postler::VERSION.match(/(^\d\.\d$)/).should_not be_nil
   end
 
   context "when it contains hashtags" do
 
-    it "they are identified" do
+    it "identifies them" do
       micropost.text = "Testpost in #ginkgo with bla#blub #content"
       micropost.parse
 
@@ -30,11 +35,22 @@ describe "Micropost" do
 
   context "when it contains user mentions" do
 
-    it "they are identified" do
+    it "identifies them" do
       micropost.text = "Testpost from @me to @admin #tag"
       micropost.parse
 
       micropost.user_mentions.size.should == 2
+    end
+
+  end
+
+  context "when it contains event mentions" do
+
+    it "identifies them" do
+      micropost.text = "Testpost from @me to @admin #tag at +event1"
+      micropost.parse
+
+      micropost.events.size.should == 1
     end
 
   end

@@ -13,6 +13,7 @@ module Postler
 
       embeds_many :hashtags, class_name: "Postler::Entities::Hashtag"
       embeds_many :user_mentions, class_name: "Postler::Entities::UserMentions"
+      embeds_many :events, class_name: "Postler::Entities::Event"
 
       validates_presence_of :text
       validates :text, :length => { :maximum => 140 }
@@ -20,13 +21,7 @@ module Postler
     end
 
     module ClassMethods
-
-      def version_string
-        "Postler version #{Postler::VERSION}"
-      end
-
     end
-
 
     def identify_user_mentions
       processed_text = ""
@@ -54,6 +49,23 @@ module Postler
           tag.indices << processed_text.length
           tag.indices << processed_text.length + word.length - 1 # minus 1 cause we start with 0
           self.hashtags << tag
+        end
+
+        processed_text = processed_text + word + " "
+      end
+
+      processed_text
+    end
+
+    def identify_events
+      processed_text = ""
+
+      self.text.split(/ /).each do |word|
+        if word.match(/^\+/)
+          ev = Postler::Entities::Event.new :name => word
+          ev.indices << processed_text.length
+          ev.indices << processed_text.length + word.length - 1 # minus 1 cause we start with 0
+          self.events << ev
         end
 
         processed_text = processed_text + word + " "

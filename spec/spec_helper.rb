@@ -34,7 +34,7 @@ DATABASE_ID = Process.pid
 DatabaseCleaner.strategy = :truncation
 
 Mongoid.configure do |config|
-  database = Mongo::Connection.new.db("postler_#{DATABASE_ID}")
+  database = Mongo::Connection.new.db("postler_test")
   database.add_user("postler", "test")
   config.master = database
   config.logger = nil
@@ -64,7 +64,7 @@ RSpec.configure do |config|
   end
 
   config.after :suite do
-    Mongoid.master.connection.drop_database("postler_#{DATABASE_ID}")
+    Mongoid.master.connection.drop_database("postler_test")
   end
 
 end
