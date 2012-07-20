@@ -9,6 +9,8 @@ module Postler
 
       field :text, type: String
 
+      field :coordinates, type: Hash
+
       #embeds_one :entities, class_name: "Postler::EntitiesContainer"
 
       embeds_many :hashtags, class_name: "Postler::Entities::Hashtag"

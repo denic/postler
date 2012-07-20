@@ -19,7 +19,7 @@ describe "Micropost" do
   end
 
   it 'should return correct version string' do
-    Postler::VERSION.match(/(^\d\.\d$)/).should_not be_nil
+    Postler::VERSION.match(/(^\d\.\d.\d$)/).should_not be_nil
   end
 
   context "when it contains hashtags" do
